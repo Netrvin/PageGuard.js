@@ -17,3 +17,6 @@ No matter whether javascript is enabled or not, non-professional user cannot do 
 <link href="https://netrvin.github.io/AntiCopy/anticopy.css" rel="stylesheet">
 <script type="text/javascript" src="https://netrvin.github.io/AntiCopy/anticopy.js"></script>
 ```
+## Examples
+
+https://netrvin.github.io/AntiCopy/test.html
