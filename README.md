@@ -73,4 +73,5 @@ https://netrvin.github.io/PageGuard.js/example.html
 
 ## Thanks
 https://github.com/sindresorhus/devtools-detect
+
 https://stackoverflow.com/questions/7798748/find-out-whether-chrome-console-is-open
