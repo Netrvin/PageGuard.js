@@ -12,6 +12,7 @@ You can use CSS if you don't run Javascript. But for safety, you should use this
 
 ## Uasge
 **Warning: This JS cannot work in IE 10 or earlier, if you want to prohibit copy, please use the CSS below.**
+
 Download or
 ```
 <script type="text/javascript" src="https://netrvin.github.io/PageGuard.js/pageguard.min.js"></script>
