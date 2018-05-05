@@ -23,17 +23,9 @@
 
 	<script>
 		(function () {
-			var anticopy_id = PageGuard.anticopy();
+			var anticopy_id = PageGuard.antiCopy();
 			setTimeout(function () {
-				clearInterval(anticopy_id);
-				document.oncontextmenu = null;
-				document.oncopy = null;
-				document.onselectstart = null;
-				document.ondragstart = null;
-				document.oncopy = null;
-				document.onbeforecopy = null;
-				document.onkeydown = null;
-				window.onhelp = null;
+				PageGuard.allowCopy(anticopy_id);
 				alert('You can copy now');
 			}, 10000);
 

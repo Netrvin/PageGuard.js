@@ -18,20 +18,12 @@ Download or
 ```
 ### AntiCopy
 ```
-var anticopy_id = PageGuard.anticopy();
+var anticopy_id = PageGuard.antiCopy();
 ```
 
 You can use the following codes to allow user to copy again (Cannot clear the CSS):
 ```
-clearInterval(anticopy_id);
-document.oncontextmenu = null; 
-document.oncopy = null;
-document.onselectstart = null;
-document.ondragstart = null;
-document.oncopy = null;
-document.onbeforecopy = null;
-document.onkeydown = null;
-window.onhelp = null;
+PageGuard.allowCopy(anticopy_id);
 ```
 
 ### Detect Developers Tools
