@@ -11,12 +11,12 @@ It can prevents user from :
 You can use CSS if you don't run Javascript. But for safety, you should use this javascript and make your page only show when the Javscript is on.
 
 ## Uasge
+**Warning: This JS cannot work in IE 10 or earlier, if you want to prohibit copy, please use the CSS below.**
 Download or
 ```
 <script type="text/javascript" src="https://netrvin.github.io/PageGuard.js/pageguard.min.js"></script>
 ```
 ### AntiCopy
-**Please use the CSS below if you want to prohibit copy in IE.**
 ```
 var anticopy_id = PageGuard.anticopy();
 ```
@@ -39,10 +39,8 @@ Supported:
 * Chrome (latest version : 66)
 * Opera (latest version : 52)
 * Firefox (latest version : 59) (If it opens in a separate window, it will only work when the user open the console)
+* IE 11
 * Others (Not tested)
-
-Unsupported:
-* IE
 
 It can only run one at the same time.
 ```
