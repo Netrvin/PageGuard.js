@@ -1,5 +1,5 @@
 ﻿/*!
- * PageGuard.js v1.1.0 (https://github.com/Netrvin/PageGuard.js)
+ * PageGuard.js v1.1.1 (https://github.com/Netrvin/PageGuard.js)
  * Licensed under the MIT license
  * Included some codes from https://github.com/sindresorhus/devtools-detect
  * Used some codes from https://stackoverflow.com/questions/7798748/find-out-whether-chrome-console-is-open
@@ -12,14 +12,18 @@
     var detectDevTools_id = 0;
     var allow_copy = true;
     var copy_key = 0;
+    var copy_old_id = 0;
     var ele = 9;
 
     var is_firefox = navigator.userAgent.indexOf('Firefox') != -1;
     var is_edge = navigator.userAgent.indexOf('Edge') != -1;
+    var is_ie = navigator.userAgent.indexOf("MSIE") != -1 || (!!window.ActiveXObject || "ActiveXObject" in window) ;
 
-    var can_preventDefault = typeof Event.prototype.preventDefault === "function";
-    var can_stopPropagation = typeof Event.prototype.stopPropagation === "function";
-    var can_stopImmediatePropagation = typeof Event.prototype.stopImmediatePropagation === "function";
+    if (!is_ie) {
+        var can_preventDefault = typeof Event.prototype.preventDefault === "function";
+        var can_stopPropagation = typeof Event.prototype.stopPropagation === "function";
+        var can_stopImmediatePropagation = typeof Event.prototype.stopImmediatePropagation === "function";
+    }
 
     var element = document.createElement('any');
     if (element.__defineGetter__) {
@@ -60,7 +64,7 @@
         }
     }
 
-    PageGuard.anticopy = function () {
+    function antiCopy_old() {
         return setInterval(function () {
             var returnFalse = function (e) {
                 return false;
@@ -78,7 +82,9 @@
                 }
             };
         }, 100);
-    };
+    }
+
+    PageGuard.anticopy = antiCopy_old;
 
     var oncopy = function (event) {   
         var body_element = document.getElementsByTagName('body')[0];   
@@ -147,7 +153,7 @@
 
     var onmousedown = function (event) {
         if (event.button == 2) {
-            event.button = 1;
+            event.button = 0;
             if (can_preventDefault) {
                 event.preventDefault();
             }
@@ -184,42 +190,45 @@
         if (allow_copy) {
             allow_copy = false;
             copy_key = Math.random();
+            if (!is_ie) {
 
-            var EventList = [
-                'copy',
-                'cut',
-                'contextmenu',
-                'keydown',
-                'selectstart',
-                'dragstart',
-                'beforecopy',
-                'mousedown'
-            ]
+                var EventList = [
+                    'copy',
+                    'cut',
+                    'contextmenu',
+                    'keydown',
+                    'selectstart',
+                    'dragstart',
+                    'beforecopy',
+                    'mousedown'
+                ]
 
-            if (can_stopPropagation) {
-                Event.prototype.stopPropagation = function () {
-                    if ((!EventList.includes(this.type)) || allow_copy) {
-                        original_stopPropagation.apply(this, arguments)
+                if (can_stopPropagation) {
+                    Event.prototype.stopPropagation = function () {
+                        if ((!EventList.includes(this.type)) || allow_copy) {
+                            original_stopPropagation.apply(this, arguments)
+                        }
                     }
                 }
-            }
 
-            if (can_stopImmediatePropagation) {
-                Event.prototype.stopImmediatePropagation = function () {
-                    if ((!EventList.includes(this.type)) || allow_copy) {
-                        original_stopImmediatePropagation.apply(this, arguments)
+                if (can_stopImmediatePropagation) {
+                    Event.prototype.stopImmediatePropagation = function () {
+                        if ((!EventList.includes(this.type)) || allow_copy) {
+                            original_stopImmediatePropagation.apply(this, arguments)
+                        }
                     }
                 }
+
+                document.addEventListener('copy', oncopy, true);
+                document.addEventListener('selectstart', onselectstart, true);
+                document.addEventListener('mousedown', onmousedown, true);
+                document.addEventListener('keydown', onkeydown, true);
+                document.addEventListener('contextmenu', oncontextmenu, true);
+                document.addEventListener('cut', oncut, true);
+                document.addEventListener('dragstart', ondragstart, true);
+            } else {
+                copy_old_id = antiCopy_old();
             }
-
-            document.addEventListener('copy', oncopy, true);
-            document.addEventListener('selectstart', onselectstart, true);
-            document.addEventListener('mousedown', onmousedown, true);
-            document.addEventListener('keydown', onkeydown, true);
-            document.addEventListener('contextmenu', oncontextmenu, true);
-            document.addEventListener('cut', oncut, true);
-            document.addEventListener('dragstart', ondragstart, true);
-
             return copy_key;
         } else {
             return false;
@@ -229,13 +238,25 @@
     PageGuard.allowCopy = function (key) {
         if (!allow_copy) {
             if (key == copy_key) {
-                document.removeEventListener('copy', oncopy, true);
-                document.removeEventListener('selectstart', onselectstart, true);
-                document.removeEventListener('mousedown', onmousedown, true);
-                document.removeEventListener('keydown', onkeydown, true);
-                document.removeEventListener('contextmenu', oncontextmenu, true);
-                document.removeEventListener('cut', oncut, true);
-                document.removeEventListener('dragstart', ondragstart, true);
+                if (!is_ie) {
+                    document.removeEventListener('copy', oncopy, true);
+                    document.removeEventListener('selectstart', onselectstart, true);
+                    document.removeEventListener('mousedown', onmousedown, true);
+                    document.removeEventListener('keydown', onkeydown, true);
+                    document.removeEventListener('contextmenu', oncontextmenu, true);
+                    document.removeEventListener('cut', oncut, true);
+                    document.removeEventListener('dragstart', ondragstart, true);
+                } else {
+                    clearInterval(copy_old_id);
+                    document.oncontextmenu = null;
+                    document.oncopy = null;
+                    document.onselectstart = null;
+                    document.ondragstart = null;
+                    document.oncopy = null;
+                    document.onbeforecopy = null;
+                    document.onkeydown = null;
+                    window.onhelp = null;
+                }
                 return true;
             } else {
                 return false;
