@@ -1,5 +1,5 @@
 ﻿/*!
- * PageGuard.js v1.0.0 (https://github.com/Netrvin/PageGuard.js)
+ * PageGuard.js v1.0.1 (https://github.com/Netrvin/PageGuard.js)
  * Licensed under the MIT license
  * Included some codes from https://github.com/sindresorhus/devtools-detect
  * Used some codes from https://stackoverflow.com/questions/7798748/find-out-whether-chrome-console-is-open
@@ -12,12 +12,15 @@
     var detectDevTools_id = 0;
     var ele = 9;
 
-    var is_firefox = navigator.userAgent.indexOf('Firefox') != -1;
+    var is_firefox = navigator.userAgent.indexOf('Firefox') != -1; 
+    var is_edge = navigator.userAgent.indexOf('Edge') != -1;
 
     var element = document.createElement('any');
-    element.__defineGetter__('id', function () {
-        onDevToolsOpen();
-    });
+    if (element.__defineGetter__) {
+        element.__defineGetter__('id', function () {
+            onDevToolsOpen();
+        });
+    }
 
     var r = /./;
     r.toString = function () {
@@ -26,7 +29,7 @@
 
     function detectDevTools() {
 
-        if (!is_firefox) {
+        if (!(is_firefox||is_edge)) {
             console.log(element);
             ele++;
             if (ele == 10) {

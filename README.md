@@ -11,7 +11,6 @@ It can prevents user from :
 You can use CSS if you don't run Javascript. But for safety, you should use this javascript and make your page only show when the Javscript is on.
 
 ## Uasge
-**Warning: This JS cannot work in IE 10 or earlier, if you want to prohibit copy, please use the CSS below.**
 
 Download or
 ```
@@ -40,7 +39,8 @@ Supported:
 * Chrome (latest version : 66)
 * Opera (latest version : 52)
 * Firefox (latest version : 59) (If it opens in a separate window, it will only work when the user open the console)
-* IE 11
+* IE 11 (Not tested in the eralier version)
+* Edge (Doesn't work if it opens in a separate window)
 * Others (Not tested)
 
 It can only run one at the same time.
