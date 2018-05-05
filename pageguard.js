@@ -64,7 +64,7 @@
             document.oncopy = returnFalse;
             document.onselectstart = returnFalse;
             document.ondragstart = returnFalse;
-            document.oncopy = returnFalse;
+            document.oncut = returnFalse;
             document.onbeforecopy = returnFalse;
             window.onhelp = returnFalse;
             document.onkeydown = function (event) {
