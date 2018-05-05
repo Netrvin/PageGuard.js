@@ -16,7 +16,7 @@ Download or
 <script type="text/javascript" src="https://netrvin.github.io/PageGuard.js/pageguard.min.js"></script>
 ```
 ### AntiCopy
-Please use the CSS below if you want to prohibit copy in IE.
+**Please use the CSS below if you want to prohibit copy in IE.**
 ```
 var anticopy_id = PageGuard.anticopy();
 ```
