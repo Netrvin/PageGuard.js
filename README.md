@@ -1,6 +1,8 @@
 # PageGuard.js
 No copying, printing as well as opening developers tools.
 
+Only **1.6KB** after gzipped.
+
 It can prevents user from :
 * Select
 * Print
