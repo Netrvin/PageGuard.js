@@ -15,7 +15,7 @@ You can use CSS if you don't run Javascript. But for safety, you should use this
 ## Uasge
 
 Download and install `pageguard.min.js`
-```
+
 ### AntiCopy
 ```
 var anticopy_key = PageGuard.antiCopy();
