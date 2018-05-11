@@ -1,31 +1,29 @@
 # PageGuard.js
 No copying, printing as well as opening developers tools.
 
-Only **1.6KB** after gzipped.
-
 It can prevents user from :
 * Select
 * Print
 * Right click
 * Crtl / Shift / Alt / F12
 * Open Developers Tools (Including opening in a separate window)
+* Run some scripts
+* Move mouse out of the page
 
 You can use CSS if you don't run Javascript. But for safety, you should use this javascript and make your page only show when the Javscript is on.
 
 ## Uasge
 
-Download or
-```
-<script type="text/javascript" src="https://netrvin.github.io/PageGuard.js/pageguard.min.js"></script>
+Download and install `pageguard.min.js`
 ```
 ### AntiCopy
 ```
-var anticopy_id = PageGuard.antiCopy();
+var anticopy_key = PageGuard.antiCopy();
 ```
 
 You can use the following codes to allow user to copy again (Cannot clear the CSS):
 ```
-PageGuard.allowCopy(anticopy_id);
+PageGuard.allowCopy(anticopy_key);
 ```
 
 ### Detect Developers Tools
@@ -39,18 +37,47 @@ Supported:
 
 It can only run one at the same time.
 ```
-var detect_key = PageGuard.detectDevTools(function () {
+var detectDevTools_key = PageGuard.detectDevTools(function () {
 	// Your codes will run when developers tools is opening
 });
 ```
 
 You can also use the following codes to stop detecting:
 ```
-PageGuard.stopDetecting(detect_key);
+PageGuard.stopDetectingDevTools(detectDevTools_key);
 ```
 
+### Detect Suspect Actions
+Detect:
+* Focus and blur
+* Mouse leave and enter
+
+```
+var detectSuspect_key = PageGuard.detectSuspectActions(function(){
+    // Run when it begins
+},function(){
+	// Run when it ends
+});
+
+```
+
+Stop it:
+```
+PageGuard.stopDetectingSuspectActions(detectSuspect_key);
+```
+
+### Disable dangerous functions
+This will disable follwing functions to keep users from running some scripts:
+* window.open (Open a new window with copy-able contents)
+* URL.createObjectURL (Generate files to download)
+```
+PageGuard.disableFunctions();
+```
+**Warning:** With disabling these functions, your codes may not work well
+
+
 ## Safe Tips
-Don't let user get the anticopy_id and the detect_key.
+Don't let user get the key.
 You can write your codes like this:
 ```
 (function () {
@@ -60,10 +87,7 @@ You can write your codes like this:
 
 ## Addons
 ### Anti Copy & Print (CSS)
-Download or
-```
-<link href="https://netrvin.github.io/PageGuard.js/anticopy.min.css" rel="stylesheet">
-```
+Download and install `anticopy.min.css`
 
 ## Examples
 https://netrvin.github.io/PageGuard.js/example.html

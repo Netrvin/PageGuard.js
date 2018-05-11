@@ -23,12 +23,6 @@
 
 	<script>
 		(function () {
-			var anticopy_id = PageGuard.antiCopy();
-			setTimeout(function () {
-				PageGuard.allowCopy(anticopy_id);
-				alert('You can copy now');
-			}, 10000);
-
 			function ready(func) {
 				if (document.addEventListener) {
 					document.addEventListener('DOMContentLoaded', function () {
@@ -44,14 +38,32 @@
 					});
 				}
 			}
-
+			var detectDevTools_key = 0;
 			ready(function () {
-				var detect_key = PageGuard.detectDevTools(function () {
+				detect_key = PageGuard.detectDevTools(function () {
 					window.document.body.innerHTML = 'No copying or analyzing.';
-					PageGuard.stopDetecting(detect_key);
 					// console.clear(); // Sometimes it may makes this page crash
 				});
 			});
+
+			var HTML;
+
+			var detectSuspect_key = PageGuard.detectSuspectActions(function () {
+				HTML = document.body.innerHTML;
+				document.body.innerHTML = 'Move your mouse back and click';
+			}, function () {
+				document.body.innerHTML = HTML;
+			});
+
+			PageGuard.disableFunctions();
+
+			var anticopy_key = PageGuard.antiCopy();
+			setTimeout(function () {
+				PageGuard.allowCopy(anticopy_key);
+				PageGuard.stopDetecting(detectDevTools_key);
+				PageGuard.stopDetectingSuspectActions(detectSuspect_key);
+				alert('You can copy now');
+			}, 20000);
 
 		})();
 	</script>

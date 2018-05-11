@@ -1,5 +1,5 @@
 ﻿/*!
- * PageGuard.js v1.1.1 (https://github.com/Netrvin/PageGuard.js)
+ * PageGuard.js v1.2.0 (https://github.com/Netrvin/PageGuard.js)
  * Licensed under the MIT license
  * Included some codes from https://github.com/sindresorhus/devtools-detect
  * Used some codes from https://stackoverflow.com/questions/7798748/find-out-whether-chrome-console-is-open
@@ -13,11 +13,17 @@
     var allow_copy = true;
     var copy_key = 0;
     var copy_old_id = 0;
+    var protect_function = false;
+    //var protect_function_key = 0;
     var ele = 9;
 
     var is_firefox = navigator.userAgent.indexOf('Firefox') != -1;
     var is_edge = navigator.userAgent.indexOf('Edge') != -1;
-    var is_ie = navigator.userAgent.indexOf("MSIE") != -1 || (!!window.ActiveXObject || "ActiveXObject" in window) ;
+    var is_ie = navigator.userAgent.indexOf("MSIE") != -1; // <= IE 10
+
+    var returnFalse = function (e) {
+        return false;
+    };
 
     if (!is_ie) {
         var can_preventDefault = typeof Event.prototype.preventDefault === "function";
@@ -66,9 +72,6 @@
 
     function antiCopy_old() {
         return setInterval(function () {
-            var returnFalse = function (e) {
-                return false;
-            };
             document.oncontextmenu = returnFalse;
             document.oncopy = returnFalse;
             document.onselectstart = returnFalse;
@@ -283,7 +286,7 @@
         }
     };
 
-    PageGuard.stopDetecting = function (key) {
+    PageGuard.stopDetectingDevTools = function (key) {
         if (is_detecting) {
             if (key == stop_key) {
                 is_detecting = false;
@@ -297,6 +300,144 @@
             return false;
         }
     };
+
+    PageGuard.stopDetecting = PageGuard.stopDetectingDevTools;
+
+    PageGuard.disableFunctions = function () {
+        if (!protect_function) {
+            protect_function = true;
+            window.open = function () {
+                return false;
+            };
+            if (!is_ie) {
+                URL.createObjectURL = function () {
+                    return false;
+                };
+            }
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    var is_detecting_suspect = false;
+    var detect_suspect_key = 0;
+    var ds_status = false;
+    var focus_status = true;
+    var mouse_status = true;
+    var on_ds_begin = returnFalse;
+    var on_ds_end = returnFalse;
+    var ds_interval_id = 0;
+
+    var withoutChildFunction = function (func) {
+        return function (e) {
+            var parent = e.relatedTarget;
+            while (parent != this && parent) {
+                try {
+                    parent = parent.parentNode;
+                } catch (e) {
+                    break;
+                }
+            }
+            if (parent != this)
+                func(e);
+        }
+    }
+
+    PageGuard.detectSuspectActions = function (func1, func2) {
+        if (!is_detecting_suspect) {
+            is_detecting_suspect = true;
+            detect_suspect_key = Math.random();
+            on_ds_begin = withoutChildFunction(function (e) {
+                if (!ds_status) {
+                    ds_status = true;
+                    func1();
+                }　
+                mouse_status = false;
+            });
+            on_ds_end = withoutChildFunction(function (e) {
+                if (ds_status && focus_status) {
+                    ds_status = false;
+                    func2();
+                }
+                mouse_status = true;
+            });
+            if (!is_ie) {
+                document.addEventListener('mouseover', on_ds_end, true);
+                document.addEventListener('mouseout', on_ds_begin, true);
+            }
+            ds_interval_id = setInterval(function () {
+                window.onblur = function () {
+                    if (!ds_status) {
+                        ds_status = true;
+                        func1();
+                    }
+                    focus_status = false;
+                };
+                window.onfocus = function () {
+                    if (ds_status && mouse_status) {
+                        ds_status = false;
+                        func2();
+                    }
+                    focus_status = true;
+                };
+            }, 100);
+            return detect_suspect_key;
+        } else {
+            return false;
+        }
+    };
+
+    PageGuard.stopDetectingSuspectActions = function (key) {
+        if (is_detecting_suspect) {
+            if (key == detect_suspect_key) {
+                is_detecting_suspect = false;
+                if (!is_ie) {
+                    document.removeEventListener('mouseover', on_ds_end, true);
+                    document.removeEventListener('mouseout', on_ds_begin, true);
+                }
+                clearInterval(ds_interval_id);
+                window.onblur = null;
+                window.onfocus = null;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    };
+
+    // Need to be fixed
+    /*
+    function randomText(len) {
+        var s = '';
+        var chars = 'ABCDEFGHIJKMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';　　
+        var char_len = chars.length;
+        for (var i = 0; i < len; i++) {
+            s += chars.charAt(Math.floor(Math.random() * char_len));
+        }
+        return s;
+    }
+
+    function confuseContent() {
+        var ele_list = ['p', 'a', 'span', 'textarea'];
+        for (var i=0;i<ele_list.length;i++) {
+            var ele_clt=document.getElementsByTagName(ele_list[i]);
+            for (var j=0;j<ele_clt.length;j++) {
+                var new_span = document.createElement('span');
+                new_span.innerText = randomText(100);
+                new_span.style.position = 'fixed !important';
+                new_span.style['z-index'] = '-99999 !important';
+                new_span.style.right = '-1000% !important';
+                new_span.style.display = 'inline !important';
+                ele_clt[j].parentNode.insertBefore(new_span, ele_clt[j]);
+            }
+        }
+    }
+
+    PageGuard.confuseContent = confuseContent;
+    */
 
     window.PageGuard = PageGuard;
 })();
