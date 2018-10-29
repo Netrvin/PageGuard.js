@@ -31,7 +31,7 @@ Supported:
 * Chrome (latest version : 66)
 * Opera (latest version : 52)
 * Firefox (latest version : 59) (If it opens in a separate window, it will only work when the user open the console)
-* IE 11 (Not tested in the eralier version)
+* IE 11 (Not tested in the earlier version)
 * Edge (Doesn't work if it opens in a separate window)
 * Others (Not tested)
 
