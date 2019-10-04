@@ -1,8 +1,8 @@
 # PageGuard.js
 
-**Warning: This script may not work in Chrome 77.**
-**Warning: This script may not work in Chrome 77.**
-**Warning: This script may not work in Chrome 77.**
+**Warning: This script may not work in Chrome 77.**  
+**Warning: This script may not work in Chrome 77.**  
+**Warning: This script may not work in Chrome 77.**  
 
 No copying, printing as well as opening developers tools.
 
