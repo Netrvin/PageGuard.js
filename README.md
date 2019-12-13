@@ -1,3 +1,4 @@
+#  [![Run on Repl.it](https://repl.it/badge/github/cursorweb/PageGuard.js)](https://repl.it/github/cursorweb/PageGuard.js)
 # PageGuard.js
 
 **Warning: This script may not work in Chrome 77.**  
